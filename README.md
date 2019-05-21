@@ -6,3 +6,5 @@ Setup a Linux server with good security settings, a running web server, and depl
 * IP address: 35.176.147.11
 
 ## Configuration Steps
+
+### Add user *grader*
