@@ -23,20 +23,6 @@ $ ssh-keygen
 # copy the public key to the server
 $ ssh-copy-id grader@35.176.147.11
 ```
-* Enable 
-```
-# Edit ssh config file
-$ sudo nano /etc/ssh/sshd_config
-```
-```
-# make the following changes to the file
-Port 2200
-PermitRootLogin  prohibit-password 
-PubkeyAuthentication yes
-```
-```
-$ sudo service ssh restart
-```
 
 ### Security
 * Configure firewall
@@ -46,7 +32,7 @@ sudo ufw allow 80/tcp
 sudo ufw allow 123/udp
 sudo ufw enable
 ```
-* Configure SSH connections 
+* Configure SSH port and authentication
 ```
 # Edit ssh config file
 $ sudo nano /etc/ssh/sshd_config
@@ -67,6 +53,48 @@ $ sudo apt-get update
 $ sudo apt-get upgrade
 ```
 
-
 ### Application Functionality
-a
+* Install git
+```
+$ sudo apt-get install git
+```
+* Clone Movie Catalog Application
+```
+$ cd /var/www
+$ git clone https://github.com/renangms/udacity-item-catalog.git movies
+```
+* Install Apache and  mod_wsgi
+```
+$ sudo apt-get install apache2 and 
+$ sudo apt-get install libapache2-mod-wsgi
+```
+* Configure Apache and mod_wsgi
+```
+$ sudo vi /var/www/movies/movies.wsgi
+```
+
+```
+import sys
+sys.path.insert(0, '/var/www/movies')
+from movies import app as application
+```
+
+```
+$ sudo vi /etc/apache2/sites-available/movies.conf
+```
+
+```
+<virtualHost *:80>
+        ServerName 35.176.147.11
+
+        WSGIScriptAlias / /var/www/movies.wsgi
+
+        <Directory /var/www/movies/>
+                Order deny,allow
+                Allow from all
+        </Directory>
+</VirtualHost>
+```
+
+```
+```
