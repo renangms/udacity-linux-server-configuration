@@ -54,47 +54,85 @@ $ sudo apt-get upgrade
 ```
 
 ### Application Functionality
+* Create directory structure
+```
+$ cd /var/www
+$ sudo mkdir catalog
+$ cd catalog
+```
 * Install git
 ```
 $ sudo apt-get install git
 ```
 * Clone Movie Catalog Application
 ```
-$ cd /var/www
-$ git clone https://github.com/renangms/udacity-item-catalog.git movies
+$ git clone https://github.com/renangms/udacity-item-catalog.git catalog
 ```
+* Rename main.py to __init__.py
+```
+$ mv main.py __init__.py
+```
+* Change directory and files ownership
+```
+$ sudo chown -R $USER /var/www/catalog/
+```
+
+* Setup virtual environment and install modules
+```
+$ sudo apt-get install python-pip
+$ sudo pip install virtualenv 
+$ cd /var/www/catalog/catalog
+$ sudo virtualenv venv
+$ source venv/bin/activate
+$ pip install Flask SQLAlchemy oauth2client requests
+```
+
 * Install Apache and  mod_wsgi
 ```
-$ sudo apt-get install apache2 and 
+$ sudo apt-get install apache2 
 $ sudo apt-get install libapache2-mod-wsgi
 ```
 * Configure Apache and mod_wsgi
 ```
-$ sudo vi /var/www/movies/movies.wsgi
+$ sudo vi /var/www/catalog/catalog.wsgi
 ```
-
 ```
 import sys
-sys.path.insert(0, '/var/www/movies')
-from movies import app as application
+sys.path.insert(0, '/var/www/catalog')
+from catalog import app as application
 ```
 
 ```
-$ sudo vi /etc/apache2/sites-available/movies.conf
+$ sudo vi /etc/apache2/sites-available/catalog.conf
 ```
 
 ```
-<virtualHost *:80>
-        ServerName 35.176.147.11
-
-        WSGIScriptAlias / /var/www/movies.wsgi
-
-        <Directory /var/www/movies/>
-                Order deny,allow
-                Allow from all
-        </Directory>
+<VirtualHost *:80>
+                ServerName 35.176.147.11
+                WSGIScriptAlias / /var/www/catalog/catalog.wsgi
+                WSGIDaemonProcess catalog python-path=/var/www/catalog:/var/www/catalog/catalog/venv/lib/python2.7/site-packages
+                WSGIProcessGroup catalog
+                <Directory /var/www/catalog/catalog/>
+                        Order allow,deny
+                        Allow from all
+                </Directory>
+                Alias /static /var/www/catalog/catalog/static
+                <Directory /var/www/helloworld/catalog/static/>
+                        Order allow,deny
+                        Allow from all
+                </Directory>
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                LogLevel warn
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 ```
+
+```
+$ sudo sudo a2enmod wsgi 
+$ sudo a2ensite catalog
+$ sudo service apache2 restart 
+```
+
 
 ## References
 - [How To Deploy a Flask Application](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
