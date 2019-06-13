@@ -133,6 +133,24 @@ $ sudo a2ensite catalog
 $ sudo service apache2 restart 
 ```
 
+* Install and configure PostgreSQL
+
+```
+$ sudo apt-get install libpq-dev postgresql postgresql-contrib
+$ sudo su - postgres
+$ psql
+postgres=# CREATE USER catalog WITH PASSWORD 'password';
+postgres=# ALTER USER catalog CREATEDB;
+postgres=# CREATE DATABASE catalog WITH OWNER catalog;
+\c catalog
+postgres=# REVOKE ALL ON SCHEMA public FROM public;
+postgres=# GRANT ALL ON SCHEMA public TO catalog;
+\q
+$ exit
+```
+
+* Change create engine line in your `__init__.py`, `database_setup.py`, `movies.py` to: `engine = create_engine('postgresql://catalog:password@localhost/catalog')`
+
 
 ## References
 - [How To Deploy a Flask Application](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
