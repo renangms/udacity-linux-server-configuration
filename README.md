@@ -35,12 +35,12 @@ sudo ufw enable
 * Configure SSH port and authentication
 ```
 # Edit ssh config file
-$ sudo nano /etc/ssh/sshd_config
+$ sudo vi /etc/ssh/sshd_config
 ```
 ```
 # make the following changes to the file
 Port 2200
-PermitRootLogin  prohibit-password 
+PermitRootLogin  no
 RSAAuthentication yes
 PubkeyAuthentication yes
 ```
@@ -96,5 +96,8 @@ $ sudo vi /etc/apache2/sites-available/movies.conf
 </VirtualHost>
 ```
 
-```
-```
+## References
+- [How To Deploy a Flask Application](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
+- [Flask ImportError: No Module Named Flask](https://stackoverflow.com/questions/31252791/flask-importerror-no-module-named-flask)
+- [Ubuntu Server packages update message](https://serverfault.com/questions/265410/ubuntu-server-message-says-packages-can-be-updated-but-apt-get-does-not-update)
+
